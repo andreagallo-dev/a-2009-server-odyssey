@@ -1,0 +1,22 @@
+---
+services:
+  npm:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: npm
+    restart: unless-stopped
+    #dns:
+     # - 1.1.1.1
+    ports:
+      # These are the public ports. The 80 for the http requests, the 443 for https
+      - '80:80'
+      - '443:443'
+      # This is the port for the administration interface of NPM
+      - '81:81'
+    volumes:
+      - /data/npm/data:/data
+      - /data/npm/letsencrypt:/etc/letsencrypt
+    networks:
+      - nextcloud_nextcloud-net
+networks:
+  nextcloud_nextcloud-net:
+    external: true

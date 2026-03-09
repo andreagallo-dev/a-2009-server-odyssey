@@ -1,0 +1,54 @@
+services:
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    ports:
+      - 8081:80  #Port modified
+    volumes:
+      # Configuration on the SSD
+      - /data/nextcloud/config:/var/www/html/config
+      
+      - /srv/dev-disk-by-uuid-81d1d989-072c-4cc9-9c65-68c8d985e3d2/nextcloud_files:/var/www/html/data
+
+      #makes the apps permanent (solved a little bug)
+      - /data/nextcloud/custom_apps:/var/www/html/custom_apps
+    environment:
+      - MYSQL_HOST= #...personal data
+      - MYSQL_DATABASE= #...personal data
+      - MYSQL_USER= #...personal data
+      - MYSQL_PASSWORD= #...personal data
+      - NEXTCLOUD_TRUSTED_DOMAINS=andrea-server.local:8081 #...personal data
+      - "EXTRA_PARAMS= " #...personal data
+    depends_on:
+      - nextcloud-db
+      - redis
+    networks:
+      - nextcloud-net
+
+  nextcloud-db:
+    image: mariadb:10.6
+    container_name: nextcloud-db
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    volumes:
+      # Database on the SSD for max speed
+      - /data/nextcloud/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD= #...personal data
+      - MYSQL_DATABASE= #...personal data
+      - MYSQL_USER= #...personal data
+      - MYSQL_PASSWORD= #...personal data
+    networks:
+      - nextcloud-net
+
+  redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    restart: unless-stopped
+    networks:
+      - nextcloud-net
+
+networks:
+  nextcloud-net:
+    driver: bridge
