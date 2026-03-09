@@ -4,7 +4,7 @@ Welcome to my Homelab repository! I built this setup during the summer of 2025 t
 
 This project gives a second life to an old but reliable Intel Core2 Quad machine, proving that you don't need the latest enterprise hardware to have a fully functional and robust home server.
 
-![OMV-Dashboard](OMV-Dashboard.PNG)
+![OMV-Dashboard](OMV-Dashboard.png)
 
 ## 🖥️ Hardware Specifications
 
